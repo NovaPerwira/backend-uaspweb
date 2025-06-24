@@ -44,4 +44,46 @@ function paginate($total, $page, $perPage = 10) {
         'hasPrev' => $page > 1
     ];
 }
+
+
+// auth
+function sanitize_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+
+function redirect($url) {
+    header("Location: " . $url);
+    exit();
+}
+
+function is_logged_in() {
+    return isset($_SESSION['admin_id']) && !empty($_SESSION['admin_id']);
+}
+
+function require_login() {
+    if (!is_logged_in()) {
+        redirect('login.php');
+    }
+}
+
+function get_flash_message() {
+    if (isset($_SESSION['flash_message'])) {
+        $message = $_SESSION['flash_message'];
+        unset($_SESSION['flash_message']);
+        return $message;
+    }
+    return null;
+}
+
+
+function set_flash_message($message, $type = 'success') {
+    $_SESSION['flash_message'] = [
+        'message' => $message,
+        'type' => $type
+    ];
+}
 ?>
